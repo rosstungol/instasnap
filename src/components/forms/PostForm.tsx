@@ -87,7 +87,7 @@ const PostForm = ({ post }: PostFormProps) => {
             <FormItem>
               <FormLabel className='shad-form_label'>Add Location</FormLabel>
               <FormControl>
-                <Input type='text' className='shad-input' />
+                <Input type='text' className='shad-input' {...field} />
               </FormControl>
 
               <FormMessage className='shad-form_message' />
@@ -107,6 +107,7 @@ const PostForm = ({ post }: PostFormProps) => {
                   type='text'
                   className='shad-input'
                   placeholder='JS, React, NextJS'
+                  {...field}
                 />
               </FormControl>
 
