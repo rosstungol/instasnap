@@ -48,3 +48,21 @@ export const bottombarLinks = [
     label: "Create"
   }
 ]
+
+export const savedPostLinks = [
+  {
+    imgURL: "/assets/icons/posts.svg",
+    route: "/saved",
+    label: "Posts"
+  },
+  {
+    imgURL: "/assets/icons/home.svg",
+    route: "/",
+    label: "Reels"
+  },
+  {
+    imgURL: "/assets/icons/home.svg",
+    route: "/",
+    label: "Collections"
+  }
+]
