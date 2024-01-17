@@ -186,6 +186,22 @@
     @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:p-14 custom-scrollbar;
   }
 
+  .saved-links_list {
+    @apply flex border border-dark-3 rounded-md overflow-hidden;
+  }
+
+  .saved-link_item {
+    @apply bg-dark-2 border-r border-dark-3;
+  }
+
+  .saved-link_item:last-child {
+    @apply border-none;
+  }
+
+  .saved-link {
+    @apply flex gap-4 items-center py-2 px-10;
+  }
+
   /* Bottom bar */
   .bottom-bar {
     @apply z-50 flex-between w-full sticky bottom-0 rounded-t-[20px] bg-dark-2 px-5 py-4 md:hidden;
