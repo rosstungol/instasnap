@@ -1,8 +1,19 @@
 import { NavLink, useLocation } from "react-router-dom"
 import { savedPostLinks } from "@/constants"
+import { useGetCurrentUser } from "@/lib/react-query/queriesAndMutations"
+import Loader from "@/components/shared/Loader"
 
 const Saved = () => {
   const { pathname } = useLocation()
+  const { data: user } = useGetCurrentUser()
+
+  if (!user) {
+    return (
+      <div className='flex flex-center w-full h-full'>
+        <Loader />
+      </div>
+    )
+  }
 
   return (
     <div className='flex flex-1'>
