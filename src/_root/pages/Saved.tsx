@@ -5,10 +5,9 @@ import Loader from "@/components/shared/Loader"
 import GridPostList from "@/components/shared/GridPostList"
 
 const Saved = () => {
-  const { pathname } = useLocation()
-  const { data: user } = useGetCurrentUser()
+  const { data: currentUser } = useGetCurrentUser()
 
-  if (!user) {
+  if (!currentUser) {
     return (
       <div className='flex flex-center w-full h-full'>
         <Loader />
