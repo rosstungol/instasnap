@@ -54,7 +54,7 @@ const Saved = () => {
         </div>
 
         <div className='flex flex-wrap gap-9 w-full max-w-5xl'>
-          <GridPostList posts={user.posts} showUser={false} showStats={false} />
+          <GridPostList posts={user.save} showUser={false} showStats={false} />
         </div>
       </div>
     </div>
