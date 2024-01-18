@@ -2,6 +2,7 @@ import { NavLink, useLocation } from "react-router-dom"
 import { savedPostLinks } from "@/constants"
 import { useGetCurrentUser } from "@/lib/react-query/queriesAndMutations"
 import Loader from "@/components/shared/Loader"
+import GridPostList from "@/components/shared/GridPostList"
 
 const Saved = () => {
   const { pathname } = useLocation()
@@ -52,7 +53,9 @@ const Saved = () => {
           </div>
         </div>
 
-        <div className='flex flex-wrap gap-9 w-full max-w-5xl'></div>
+        <div className='flex flex-wrap gap-9 w-full max-w-5xl'>
+          <GridPostList posts={user.posts} showUser={false} showStats={false} />
+        </div>
       </div>
     </div>
   )
