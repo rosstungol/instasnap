@@ -1,8 +1,5 @@
-import { NavLink, useLocation } from "react-router-dom"
-import { savedPostLinks } from "@/constants"
 import { useGetCurrentUser } from "@/lib/react-query/queriesAndMutations"
-import Loader from "@/components/shared/Loader"
-import GridPostList from "@/components/shared/GridPostList"
+import { GridPostList, Loader } from "@/components/shared"
 
 const Saved = () => {
   const { data: currentUser } = useGetCurrentUser()

@@ -6,8 +6,8 @@ import {
   useLikePost,
   useSavePost
 } from "@/lib/react-query/queriesAndMutations"
+import { Loader } from "@/components/shared"
 import { checkIsLiked } from "@/lib/utils"
-import Loader from "@/components/shared/Loader"
 
 type PostStatsProps = {
   post?: Models.Document
