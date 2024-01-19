@@ -2,10 +2,7 @@ import { useState, useEffect } from "react"
 import { useInView } from "react-intersection-observer"
 import { Input } from "@/components/ui/input"
 import { GridPostList, Loader, SearchResults } from "@/components/shared"
-import {
-  useGetPosts,
-  useSearchPosts
-} from "@/lib/react-query/queriesAndMutations"
+import { useGetPosts, useSearchPosts } from "@/lib/react-query/queries"
 import useDebounce from "@/hooks/useDebounce"
 
 const Explore = () => {

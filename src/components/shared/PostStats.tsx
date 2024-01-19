@@ -5,7 +5,7 @@ import {
   useGetCurrentUser,
   useLikePost,
   useSavePost
-} from "@/lib/react-query/queriesAndMutations"
+} from "@/lib/react-query/queries"
 import { Loader } from "@/components/shared"
 import { checkIsLiked } from "@/lib/utils"
 
