@@ -1,8 +1,8 @@
-import { useUserContext } from "@/context/AuthContext"
-import { multiFormatDateString } from "@/lib/utils"
 import { Models } from "appwrite"
 import { Link } from "react-router-dom"
-import PostStats from "./PostStats"
+import { PostStats } from "@/components/shared"
+import { multiFormatDateString } from "@/lib/utils"
+import { useUserContext } from "@/context/AuthContext"
 
 type PostCardProps = {
   post: Models.Document
@@ -20,11 +20,11 @@ const PostCard = ({ post }: PostCardProps) => {
           <Link to={`/profile/${post.creator.$id}`}>
             <img
               src={
-                post?.creator?.imageUrl ||
+                post.creator?.imageUrl ||
                 "/assets/icons/profile-placeholder.svg"
               }
               alt='creator'
-              className='rounded-full w-12 lg:h-12'
+              className='w-12 lg:h-12 rounded-full'
             />
           </Link>
 
@@ -36,7 +36,7 @@ const PostCard = ({ post }: PostCardProps) => {
               <p className='subtle-semibold lg:small-regular'>
                 {multiFormatDateString(post.$createdAt)}
               </p>
-              -
+              •
               <p className='subtle-semibold lg:small-regular'>
                 {post.location}
               </p>
@@ -48,16 +48,21 @@ const PostCard = ({ post }: PostCardProps) => {
           to={`/update-post/${post.$id}`}
           className={`${user.id !== post.creator.$id && "hidden"}`}
         >
-          <img src='/assets/icons/edit.svg' alt='edit' width={20} height={20} />
+          <img
+            src={"/assets/icons/edit.svg"}
+            alt='edit'
+            width={20}
+            height={20}
+          />
         </Link>
       </div>
 
-      <Link to={`/posts/${post.id}`}>
+      <Link to={`/posts/${post.$id}`}>
         <div className='small-medium lg:base-medium py-5'>
           <p>{post.caption}</p>
           <ul className='flex gap-1 mt-2'>
-            {post.tags.map((tag: string) => (
-              <li key={tag} className='text-light-3'>
+            {post.tags.map((tag: string, index: string) => (
+              <li key={`${tag}${index}`} className='text-light-3 small-regular'>
                 #{tag}
               </li>
             ))}
@@ -66,8 +71,8 @@ const PostCard = ({ post }: PostCardProps) => {
 
         <img
           src={post.imageUrl || "/assets/icons/profile-placeholder.svg"}
-          className='post-card_img'
           alt='post image'
+          className='post-card_img'
         />
       </Link>
 
