@@ -5,7 +5,7 @@ import { Button } from "@/components/ui"
 import { GridPostList, Loader } from "@/components/shared"
 
 const Profile = () => {
-  const { data: currentUser } = useGetCurrentUser()
+  const { data: currentUser, isPending: isUserLoading } = useGetCurrentUser()
 
   const userPosts = currentUser?.save
     .map((savePost: Models.Document) => ({
@@ -52,7 +52,7 @@ const Profile = () => {
         </div>
       </div>
       <div>
-        {!currentUser ? (
+        {isUserLoading ? (
           <Loader />
         ) : (
           <GridPostList posts={userPosts} showStats={false} showUser={false} />
