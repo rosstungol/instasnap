@@ -16,8 +16,6 @@ const Profile = () => {
     }))
     .reverse()
 
-  console.log(userPosts)
-
   return (
     <div className='profile-container'>
       <div className='profile-inner_container'>
