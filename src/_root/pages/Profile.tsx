@@ -2,6 +2,7 @@ import { Models } from "appwrite"
 import { Link } from "react-router-dom"
 import { useGetCurrentUser } from "@/lib/react-query/queries"
 import { Button } from "@/components/ui"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { GridPostList, Loader } from "@/components/shared"
 
 const Profile = () => {
@@ -53,9 +54,25 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <div>
-        <GridPostList posts={userPosts} showStats={false} showUser={false} />
-      </div>
+
+      <Tabs defaultValue='posts'>
+        <TabsList className='mb-8'>
+          <TabsTrigger value='posts' className='profile-tab'>
+            <img src='/assets/icons/posts.svg' />
+            Posts
+          </TabsTrigger>
+          <TabsTrigger value='likes' className='profile-tab'>
+            <img src='/assets/icons/like.svg' />
+            Likes
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value='posts'>
+          <GridPostList posts={userPosts} showStats={false} showUser={false} />
+        </TabsContent>
+        <TabsContent value='likes'>
+          <GridPostList posts={userLikes} showStats={false} showUser={false} />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
