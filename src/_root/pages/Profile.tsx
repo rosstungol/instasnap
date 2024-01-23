@@ -16,6 +16,8 @@ const Profile = () => {
     }))
     .reverse()
 
+  if (isUserLoading) return <Loader />
+
   return (
     <div className='profile-container'>
       <div className='profile-inner_container'>
@@ -50,11 +52,7 @@ const Profile = () => {
         </div>
       </div>
       <div>
-        {isUserLoading ? (
-          <Loader />
-        ) : (
-          <GridPostList posts={userPosts} showStats={false} showUser={false} />
-        )}
+        <GridPostList posts={userPosts} showStats={false} showUser={false} />
       </div>
     </div>
   )
