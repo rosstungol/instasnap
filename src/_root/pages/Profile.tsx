@@ -16,6 +16,8 @@ const Profile = () => {
     }))
     .reverse()
 
+  const userLikes = currentUser?.liked.reverse()
+
   if (isUserLoading) return <Loader />
 
   return (
