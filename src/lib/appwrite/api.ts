@@ -363,3 +363,21 @@ export async function searchPosts(searchTerm: string) {
     console.log(error)
   }
 }
+
+export async function getUserById(userId?: string) {
+  if (!userId) return
+
+  try {
+    const user = await databases.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      userId
+    )
+
+    if (!user) return
+
+    return user
+  } catch (error) {
+    console.log(error)
+  }
+}
