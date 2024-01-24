@@ -10,6 +10,7 @@ import { useGetUserById } from "@/lib/react-query/queries"
 import { GridPostList, Loader } from "@/components/shared"
 import { useUserContext } from "@/context/AuthContext"
 import { LikedPosts } from "."
+import { Button } from "@/components/ui"
 
 const Profile = () => {
   const { id } = useParams()
@@ -49,6 +50,31 @@ const Profile = () => {
             <p className='small-medium md:base-medium text-center xl:text-left mt-7 max-w-screen-sm'>
               {currentUser.bio}
             </p>
+          </div>
+
+          <div className='flex justify-center gap-4'>
+            {user.id === currentUser.$id ? (
+              <Link
+                to={`/update-profile/${currentUser.$id}`}
+                className={`h-12 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg ${
+                  user.id !== currentUser.$id && "hidden"
+                }`}
+              >
+                <img
+                  src={"/assets/icons/edit.svg"}
+                  alt='edit'
+                  width={20}
+                  height={20}
+                />
+                <p className='flex whitespace-nowrap small-medium'>
+                  Edit Profile
+                </p>
+              </Link>
+            ) : (
+              <Button type='button' className='shad-button_primary px-8'>
+                Follow
+              </Button>
+            )}
           </div>
         </div>
       </div>
