@@ -1,78 +1,105 @@
-import { Models } from "appwrite"
-import { Link } from "react-router-dom"
-import { useGetCurrentUser } from "@/lib/react-query/queries"
-import { Button } from "@/components/ui"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Link,
+  Outlet,
+  Route,
+  Routes,
+  useLocation,
+  useParams
+} from "react-router-dom"
+import { useGetUserById } from "@/lib/react-query/queries"
 import { GridPostList, Loader } from "@/components/shared"
+import { useUserContext } from "@/context/AuthContext"
+import { LikedPosts } from "."
 
 const Profile = () => {
-  const { data: currentUser, isPending: isUserLoading } = useGetCurrentUser()
+  const { id } = useParams()
+  const { pathname } = useLocation()
+  const { user } = useUserContext()
+  const { data: currentUser } = useGetUserById(id || "")
 
-  const userPosts = currentUser?.save
-    .map((savePost: Models.Document) => ({
-      ...savePost.post,
-      creator: {
-        imageUrl: currentUser.imageUrl
-      }
-    }))
-    .reverse()
-
-  const userLikes = currentUser?.liked.reverse()
-
-  if (isUserLoading) return <Loader />
+  if (!currentUser)
+    return (
+      <div className='flex-center w-full h-full'>
+        <Loader />
+      </div>
+    )
 
   return (
     <div className='profile-container'>
       <div className='profile-inner_container'>
-        <div className='flex gap-8'>
+        <div className='flex xl:flex-row flex-col max-xl:items-center flex-1 gap-7'>
           <img
             src={
-              currentUser?.imageUrl || "/assets/icons/profile-placeholder.svg"
+              currentUser.imageUrl || "/assets/icons/profile-placeholder.svg"
             }
             width={150}
             height={150}
             className='rounded-full'
           />
-          <div>
-            <div className='flex items-center gap-10'>
-              <h2 className='h1-semibold'>{currentUser?.name}</h2>
-
-              <Link to={`/update-profile/${currentUser?.$id}`}>
-                <Button type='button' className='shad-button_dark_4'>
-                  <img src='/assets/icons/edit.svg' width={24} height={24} />
-                  Edit Profile
-                </Button>
-              </Link>
+          <div className='flex flex-col flex-1 justify-between md:mt-2'>
+            <div className='flex flex-col w-full'>
+              <h1 className='text-center xl:text-left h3-bold md:h1-semibold w-full'>
+                {currentUser.name}
+              </h1>
+              <p className='small-regular md:body-medium text-light-3 text-center xl:text-left'>
+                @{currentUser.username}
+              </p>
             </div>
-            <p className='text-light-3 body-medium mb-6'>
-              {currentUser?.username}
-            </p>
-            <p className='base-regular'>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit.{" "}
-              {currentUser?.bio}
+
+            <p className='small-medium md:base-medium text-center xl:text-left mt-7 max-w-screen-sm'>
+              {currentUser.bio}
             </p>
           </div>
         </div>
       </div>
 
-      <Tabs defaultValue='posts'>
-        <TabsList className='mb-8'>
-          <TabsTrigger value='posts' className='profile-tab'>
-            <img src='/assets/icons/posts.svg' />
+      {currentUser.$id === user.id && (
+        <div className='flex max-w-5xl w-full'>
+          <Link
+            to={`/profile/${id}`}
+            className={`profile-tab rounded-l-lg ${
+              pathname === `/profile/${id}` && "!bg-dark-3"
+            }`}
+          >
+            <img
+              src='/assets/icons/posts.svg'
+              alt='posts'
+              width={20}
+              height={20}
+            />
             Posts
-          </TabsTrigger>
-          <TabsTrigger value='likes' className='profile-tab'>
-            <img src='/assets/icons/like.svg' />
+          </Link>
+          <Link
+            to={`/profile/${id}/liked-posts`}
+            className={`profile-tab rounded-r-lg ${
+              pathname === `/profile/${id}/liked-posts` && "!bg-dark-3"
+            }`}
+          >
+            <img
+              src='/assets/icons/like.svg'
+              alt='likes'
+              width={20}
+              height={20}
+            />
             Likes
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value='posts'>
-          <GridPostList posts={userPosts} showStats={false} showUser={false} />
-        </TabsContent>
-        <TabsContent value='likes'>
-          <GridPostList posts={userLikes} showStats={false} showUser={false} />
-        </TabsContent>
-      </Tabs>
+          </Link>
+        </div>
+      )}
+
+      <Routes>
+        <Route
+          index
+          element={
+            <GridPostList
+              posts={currentUser.posts}
+              showStats={false}
+              showUser={false}
+            />
+          }
+        />
+        <Route path='/liked-posts' element={<LikedPosts />} />
+      </Routes>
+      <Outlet />
     </div>
   )
 }
