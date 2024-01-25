@@ -1,5 +1,6 @@
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useNavigate, useParams } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,11 +16,11 @@ import { ProfileValidation } from "@/lib/validation"
 import { Textarea } from "../ui"
 import PhotoUploader from "../shared/ProfileUploader"
 import { useUserContext } from "@/context/AuthContext"
-import { useParams } from "react-router-dom"
 import { useGetUserById } from "@/lib/react-query/queries"
 import { Loader } from "../shared"
 
 const ProfileForm = () => {
+  const navigate = useNavigate()
   const { id } = useParams()
   const { data: currentUser } = useGetUserById(id || "")
   const { user } = useUserContext()
@@ -128,7 +129,11 @@ const ProfileForm = () => {
         />
 
         <div className='flex gap-4 items-center justify-end'>
-          <Button type='button' className='shad-button_dark_4'>
+          <Button
+            type='button'
+            className='shad-button_dark_4'
+            onClick={() => navigate(-1)}
+          >
             Cancel
           </Button>
           <Button
