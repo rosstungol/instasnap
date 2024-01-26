@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { ProfileValidation } from "@/lib/validation"
 import { Textarea } from "../ui"
-import PhotoUploader from "../shared/ProfileUploader"
+import { ProfileUploader } from "../shared"
 import { useUserContext } from "@/context/AuthContext"
 import { useGetUserById } from "@/lib/react-query/queries"
 import { Loader } from "../shared"
@@ -59,7 +59,7 @@ const ProfileForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <PhotoUploader
+                <ProfileUploader
                   fieldChange={field.onChange}
                   mediaUrl={currentUser.imageUrl}
                 />
