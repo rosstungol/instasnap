@@ -93,11 +93,11 @@ const PostForm = ({ post, action }: PostFormProps) => {
                   {...field}
                 />
               </FormControl>
-
               <FormMessage className='shad-form_message' />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name='file'
@@ -110,11 +110,11 @@ const PostForm = ({ post, action }: PostFormProps) => {
                   mediaUrl={post?.imageUrl}
                 />
               </FormControl>
-
               <FormMessage className='shad-form_message' />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name='location'
@@ -124,11 +124,11 @@ const PostForm = ({ post, action }: PostFormProps) => {
               <FormControl>
                 <Input type='text' className='shad-input' {...field} />
               </FormControl>
-
               <FormMessage className='shad-form_message' />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name='tags'
@@ -145,11 +145,11 @@ const PostForm = ({ post, action }: PostFormProps) => {
                   {...field}
                 />
               </FormControl>
-
               <FormMessage className='shad-form_message' />
             </FormItem>
           )}
         />
+
         <div className='flex gap-4 items-center justify-end'>
           <Button
             type='button'
