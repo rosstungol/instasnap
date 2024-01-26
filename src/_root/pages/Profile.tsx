@@ -56,7 +56,7 @@ const Profile = () => {
             {user.id === currentUser.$id ? (
               <Link
                 to={`/update-profile/${currentUser.$id}`}
-                className={`h-12 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg ${
+                className={`h-10 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg  ${
                   user.id !== currentUser.$id && "hidden"
                 }`}
               >
@@ -71,8 +71,15 @@ const Profile = () => {
                 </p>
               </Link>
             ) : (
-              <Button type='button' className='shad-button_primary px-8'>
-                Follow
+              <Button type='button' className='shad-button_primary '>
+                <img
+                  src={"/assets/icons/follow.svg"}
+                  alt='edit'
+                  width={20}
+                  height={20}
+                  className='invert-white'
+                />
+                <p className='flex whitespace-nowrap small-medium'>Follow</p>
               </Button>
             )}
           </div>
