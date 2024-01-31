@@ -1,15 +1,15 @@
 import { Loader } from "@/components/shared"
+import UserCard from "@/components/shared/UserCard"
+import { toast } from "@/components/ui"
 import { useGetUsers } from "@/lib/react-query/queries"
 
 const AllUsers = () => {
-  const { data: users } = useGetUsers()
+  const { data: creators, isPending, isError: isErrorCreators } = useGetUsers()
 
-  if (!users)
-    return (
-      <div className='flex-center w-full h-full'>
-        <Loader />
-      </div>
-    )
+  if (isErrorCreators) {
+    toast({ title: "Something went wrong." })
+    return
+  }
 
   return (
     <div className='common-container'>
@@ -24,22 +24,17 @@ const AllUsers = () => {
         <h2 className='h3-bold md:h2-bold text-left w-full'>All Users</h2>
       </div>
 
-      {users.map((user) => (
-        <div key={user.$id} className='flex flex-col items-center'>
-          <img
-            src={user.imageUrl || "/assets/icons/profile-placeholder.svg"}
-            alt='user'
-            width={90}
-            height={90}
-            className='rounded-full mb-4'
-          />
-          <h2>{user.name}</h2>
-          <p>{user.username}</p>
-          <button type='button' className='shad-button_primary'>
-            Follow
-          </button>
-        </div>
-      ))}
+      {isPending && !creators ? (
+        <Loader />
+      ) : (
+        <ul className='user-grid'>
+          {creators?.map((creator) => (
+            <li key={creator.$id} className='flex-1 min-w-[200px] w-full'>
+              <UserCard user={creator} />
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }
