@@ -381,3 +381,24 @@ export async function getUserById(userId?: string) {
     console.log(error)
   }
 }
+
+export async function getUsers(limit?: number) {
+  const queries: any[] = [Query.orderDesc("$createdAt")]
+
+  if (limit) {
+    queries.push(Query.limit(limit))
+  }
+  try {
+    const allUsers = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      queries
+    )
+
+    if (!allUsers) throw Error
+
+    return allUsers.documents
+  } catch (error) {
+    console.log(error)
+  }
+}
