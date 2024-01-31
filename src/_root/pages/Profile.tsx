@@ -122,7 +122,13 @@ const Profile = () => {
       <Routes>
         <Route
           index
-          element={<GridPostList posts={currentUser.posts} showUser={false} />}
+          element={
+            currentUser.posts.length === 0 ? (
+              <p className='text-light-4'>No posts available</p>
+            ) : (
+              <GridPostList posts={currentUser.posts} showUser={false} />
+            )
+          }
         />
         <Route path='/liked-posts' element={<LikedPosts />} />
       </Routes>
