@@ -1,14 +1,22 @@
 import { Link, useParams } from "react-router-dom"
-import { Loader, PostStats } from "@/components/shared"
-import { useGetPostById } from "@/lib/react-query/queries"
+import { GridPostList, Loader, PostStats } from "@/components/shared"
+import { useGetPostById, useGetUserPosts } from "@/lib/react-query/queries"
 import { multiFormatDateString } from "@/lib/utils"
 import { useUserContext } from "@/context/AuthContext"
 import { Button } from "@/components/ui/button"
 
 const PostDetails = () => {
   const { id } = useParams()
-  const { data: post, isPending } = useGetPostById(id || "")
   const { user } = useUserContext()
+
+  const { data: post, isPending } = useGetPostById(id)
+  const { data: userPosts, isPending: isUserPostLoading } = useGetUserPosts(
+    post?.creator.$id
+  )
+
+  const relatedPosts = userPosts?.documents.filter(
+    (userPost) => userPost.$id !== id
+  )
 
   const handleDeletePost = () => {}
 
@@ -97,6 +105,21 @@ const PostDetails = () => {
               <PostStats post={post} userId={user.id} />
             </div>
           </div>
+        </div>
+      )}
+
+      {relatedPosts?.length! > 0 && (
+        <div className='w-full max-w-5xl'>
+          <hr className='border w-full border-dark-4/80' />
+
+          <h3 className='body-bold md:h3-bold w-full my-10'>
+            More Related Posts
+          </h3>
+          {isUserPostLoading || !relatedPosts ? (
+            <Loader />
+          ) : (
+            <GridPostList posts={relatedPosts} />
+          )}
         </div>
       )}
     </div>
