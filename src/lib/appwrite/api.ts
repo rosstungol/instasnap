@@ -402,3 +402,21 @@ export async function getUsers(limit?: number) {
     console.log(error)
   }
 }
+
+export async function getUserPosts(userId?: string) {
+  if (!userId) return
+
+  try {
+    const userPosts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      [Query.equal("creator", userId), Query.orderDesc("createdAt")]
+    )
+
+    if (!userPosts) throw Error
+
+    return userPosts
+  } catch (error) {
+    console.log(error)
+  }
+}
