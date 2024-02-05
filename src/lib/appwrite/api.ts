@@ -410,7 +410,7 @@ export async function getUserPosts(userId?: string) {
     const userPosts = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.postCollectionId,
-      [Query.equal("creator", userId), Query.orderDesc("createdAt")]
+      [Query.equal("creator", userId), Query.orderDesc("$createdAt")]
     )
 
     if (!userPosts) throw Error
