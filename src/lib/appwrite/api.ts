@@ -177,15 +177,19 @@ export async function deleteFile(fileId: string) {
 }
 
 export async function getRecentPosts() {
-  const posts = await databases.listDocuments(
-    appwriteConfig.databaseId,
-    appwriteConfig.postCollectionId,
-    [Query.orderDesc("$createdAt"), Query.limit(20)]
-  )
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      [Query.orderDesc("$createdAt"), Query.limit(20)]
+    )
 
-  if (!posts) throw Error
+    if (!posts) throw Error
 
-  return posts
+    return posts
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export async function likePost(postId: string, likesArray: string[]) {
