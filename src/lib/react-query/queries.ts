@@ -27,6 +27,8 @@ import {
 import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 import { QUERY_KEYS } from "./queryKeys"
 
+// Auth
+
 export const useCreateUserAccount = () => {
   return useMutation({
     mutationFn: (user: INewUser) => createUserAccount(user)
@@ -46,6 +48,8 @@ export const useSignOutAccount = () => {
   })
 }
 
+// Post
+
 export const useCreatePost = () => {
   const queryClient = useQueryClient()
 
@@ -59,10 +63,48 @@ export const useCreatePost = () => {
   })
 }
 
+export const useGetPosts = () => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
+    queryFn: getInfinitePosts,
+    getNextPageParam: (lastPage) => {
+      if (lastPage && lastPage.documents.length === 0) return null
+
+      const lastId = lastPage.documents[lastPage?.documents.length - 1].$id
+
+      return lastId
+    }
+  })
+}
+
+export const useSearchPosts = (searchTerm: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.SEARCH_POSTS, searchTerm],
+    queryFn: () => searchPosts(searchTerm),
+    enabled: !!searchTerm
+  })
+}
+
 export const useGetRecentPosts = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
     queryFn: getRecentPosts
+  })
+}
+
+export const useGetPostById = (postId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
+    queryFn: () => getPostById(postId),
+    enabled: !!postId
+  })
+}
+
+export const useGetUserPosts = (userId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_POSTS, userId],
+    queryFn: () => getUserPosts(userId),
+    enabled: !!userId
   })
 }
 
@@ -133,21 +175,6 @@ export const useDeleteSavedPost = () => {
   })
 }
 
-export const useGetCurrentUser = () => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.GET_CURRENT_USER],
-    queryFn: getCurrentUser
-  })
-}
-
-export const useGetPostById = (postId?: string) => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
-    queryFn: () => getPostById(postId),
-    enabled: !!postId
-  })
-}
-
 export const useUpdatePost = () => {
   const queryClient = useQueryClient()
 
@@ -175,25 +202,12 @@ export const useDeletePost = () => {
   })
 }
 
-export const useGetPosts = () => {
-  return useInfiniteQuery({
-    queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
-    queryFn: getInfinitePosts,
-    getNextPageParam: (lastPage) => {
-      if (lastPage && lastPage.documents.length === 0) return null
+// User
 
-      const lastId = lastPage.documents[lastPage?.documents.length - 1].$id
-
-      return lastId
-    }
-  })
-}
-
-export const useSearchPosts = (searchTerm: string) => {
+export const useGetCurrentUser = () => {
   return useQuery({
-    queryKey: [QUERY_KEYS.SEARCH_POSTS, searchTerm],
-    queryFn: () => searchPosts(searchTerm),
-    enabled: !!searchTerm
+    queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+    queryFn: getCurrentUser
   })
 }
 
@@ -202,6 +216,13 @@ export const useGetUserById = (userId: string) => {
     queryKey: [QUERY_KEYS.GET_USER_BY_ID, userId],
     queryFn: () => getUserById(userId),
     enabled: !!userId
+  })
+}
+
+export const useGetUsers = (limit?: number) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USERS],
+    queryFn: () => getUsers(limit)
   })
 }
 
@@ -218,20 +239,5 @@ export const useUpdateUser = () => {
         queryKey: [QUERY_KEYS.GET_USER_BY_ID, data?.$id]
       })
     }
-  })
-}
-
-export const useGetUsers = (limit?: number) => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.GET_USERS],
-    queryFn: () => getUsers(limit)
-  })
-}
-
-export const useGetUserPosts = (userId?: string) => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.GET_USER_POSTS, userId],
-    queryFn: () => getUserPosts(userId),
-    enabled: !!userId
   })
 }
