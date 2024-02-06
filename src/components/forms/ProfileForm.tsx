@@ -13,17 +13,17 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { ProfileValidation } from "@/lib/validation"
-import { Textarea } from "../ui"
+import { Textarea, useToast } from "../ui"
 import { ProfileUploader } from "../shared"
 import { useUserContext } from "@/context/AuthContext"
-import { useGetUserById } from "@/lib/react-query/queries"
+import { useGetUserById, useUpdateUser } from "@/lib/react-query/queries"
 import { Loader } from "../shared"
 
 const ProfileForm = () => {
   const navigate = useNavigate()
+  const { toast } = useToast()
   const { id } = useParams()
-  const { data: currentUser } = useGetUserById(id || "")
-  const { user } = useUserContext()
+  const { user, setUser } = useUserContext()
 
   const form = useForm<z.infer<typeof ProfileValidation>>({
     resolver: zodResolver(ProfileValidation),
@@ -36,6 +36,10 @@ const ProfileForm = () => {
     }
   })
 
+  const { data: currentUser } = useGetUserById(id || "")
+  const { mutateAsync: updateUser, isLoading: isLoadingUpdate } =
+    useUpdateUser()
+
   if (!currentUser)
     return (
       <div className='flex-center w-full h-full'>
@@ -43,14 +47,35 @@ const ProfileForm = () => {
       </div>
     )
 
-  function onSubmit(values: z.infer<typeof ProfileValidation>) {
-    console.log(values)
+  const handleUpdate = async (values: z.infer<typeof ProfileValidation>) => {
+    const updatedUser = await updateUser({
+      userId: currentUser.$id,
+      name: values.name,
+      bio: values.bio,
+      file: values.file,
+      imageUrl: currentUser.imageUrl,
+      imageId: currentUser.imageId
+    })
+
+    if (!updatedUser) {
+      toast({ title: "Update user failed. Please try again." })
+    }
+
+    setUser({
+      ...user,
+      name: updatedUser?.name,
+      bio: updatedUser?.bio,
+      imageUrl: updatedUser?.imageUrl
+    })
+
+    toast({ title: "Update successful." })
+    return navigate(`/profile/${id}`)
   }
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(handleUpdate)}
         className='flex flex-col gap-9 w-full max-w-5xl'
       >
         <FormField
@@ -110,6 +135,7 @@ const ProfileForm = () => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name='bio'
@@ -122,7 +148,6 @@ const ProfileForm = () => {
                   {...field}
                 />
               </FormControl>
-
               <FormMessage className='shad-form_message' />
             </FormItem>
           )}
