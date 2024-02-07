@@ -23,14 +23,13 @@ import { useUserContext } from "@/context/AuthContext"
 
 const SignupForm = () => {
   const { toast } = useToast()
-  const { checkAuthUser, isLoading: isUserLoading } = useUserContext()
+  const { checkAuthUser } = useUserContext()
   const navigate = useNavigate()
 
   const { mutateAsync: createUserAccount, isPending: isCreatingAccount } =
     useCreateUserAccount()
 
-  const { mutateAsync: signInAccount, isPending: isSigningIn } =
-    useSignInAccount()
+  const { mutateAsync: signInAccount } = useSignInAccount()
 
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
@@ -98,6 +97,7 @@ const SignupForm = () => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name='username'
@@ -111,6 +111,7 @@ const SignupForm = () => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name='email'
@@ -124,6 +125,7 @@ const SignupForm = () => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name='password'
@@ -137,14 +139,9 @@ const SignupForm = () => {
               </FormItem>
             )}
           />
+
           <Button type='submit' className='shad-button_primary'>
-            {isCreatingAccount ? (
-              <div className='flex-center gap-2'>
-                <Loader /> Loading...
-              </div>
-            ) : (
-              "Sign up"
-            )}
+            {isCreatingAccount ? <Loader /> : "Sign up"}
           </Button>
 
           <p className='text-small-regular text-light-2 text-center mt-2'>
