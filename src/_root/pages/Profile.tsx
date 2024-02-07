@@ -33,9 +33,7 @@ const Profile = () => {
             src={
               currentUser.imageUrl || "/assets/icons/profile-placeholder.svg"
             }
-            width={150}
-            height={150}
-            className='rounded-full'
+            className='w-36 h-36 rounded-full object-cover'
           />
           <div className='flex flex-col flex-1 justify-between md:mt-2'>
             <div className='flex flex-col w-full'>
