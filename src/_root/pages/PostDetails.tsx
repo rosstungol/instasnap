@@ -1,13 +1,13 @@
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { GridPostList, Loader, PostStats } from "@/components/shared"
+import { Button } from "@/components/ui/button"
 import {
   useDeletePost,
   useGetPostById,
   useGetUserPosts
 } from "@/lib/react-query/queries"
-import { multiFormatDateString } from "@/lib/utils"
 import { useUserContext } from "@/context/AuthContext"
-import { Button } from "@/components/ui/button"
+import { multiFormatDateString } from "@/lib/utils"
 
 const PostDetails = () => {
   const navigate = useNavigate()
@@ -37,7 +37,6 @@ const PostDetails = () => {
       ) : (
         <div className='post_details-card'>
           <img src={post?.imageUrl} alt='post' className='post_details-img' />
-
           <div className='post_details-info'>
             <div className='flex-between w-full'>
               <Link
@@ -121,7 +120,6 @@ const PostDetails = () => {
       {relatedPosts?.length! > 0 && (
         <div className='w-full max-w-5xl'>
           <hr className='border w-full border-dark-4/80' />
-
           <h3 className='body-bold md:h3-bold w-full my-10'>
             More Related Posts
           </h3>
