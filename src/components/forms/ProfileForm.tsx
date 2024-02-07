@@ -12,12 +12,12 @@ import {
   FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Loader } from "../shared"
 import { ProfileValidation } from "@/lib/validation"
 import { Textarea, useToast } from "../ui"
 import { ProfileUploader } from "../shared"
 import { useUserContext } from "@/context/AuthContext"
 import { useGetUserById, useUpdateUser } from "@/lib/react-query/queries"
-import { Loader } from "../shared"
 
 const ProfileForm = () => {
   const navigate = useNavigate()
@@ -37,7 +37,7 @@ const ProfileForm = () => {
   })
 
   const { data: currentUser } = useGetUserById(id || "")
-  const { mutateAsync: updateUser, isLoading: isLoadingUpdate } =
+  const { mutateAsync: updateUser, isPending: isLoadingUpdate } =
     useUpdateUser()
 
   if (!currentUser)
@@ -48,7 +48,7 @@ const ProfileForm = () => {
     )
 
   const handleUpdate = async (values: z.infer<typeof ProfileValidation>) => {
-    const updatedUser = await updateUser({
+    const updatedUser: any = await updateUser({
       userId: currentUser.$id,
       name: values.name,
       bio: values.bio,
@@ -57,7 +57,7 @@ const ProfileForm = () => {
       imageId: currentUser.imageId
     })
 
-    if (!updatedUser) {
+    if (updatedUser === undefined) {
       toast({ title: "Update user failed. Please try again." })
     }
 
@@ -164,8 +164,9 @@ const ProfileForm = () => {
           <Button
             type='submit'
             className='shad-button_primary whitespace-nowrap'
+            disabled={isLoadingUpdate}
           >
-            Update Profile
+            {isLoadingUpdate ? <Loader /> : "Update Profile"}
           </Button>
         </div>
       </form>
