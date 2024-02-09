@@ -10,7 +10,19 @@ import { useGetUserById } from "@/lib/react-query/queries"
 import { GridPostList, Loader } from "@/components/shared"
 import { useUserContext } from "@/context/AuthContext"
 import { LikedPosts } from "."
-import { Button } from "@/components/ui"
+import FollowButton from "@/components/shared/FollowButton"
+
+interface StabBlockProps {
+  value: string | number
+  label: string
+}
+
+const StatBlock = ({ value, label }: StabBlockProps) => (
+  <div className='flex-center gap-2'>
+    <p className='small-semibold lg:body-bold text-primary-500'>{value}</p>
+    <p className='small-medium lg:base-medium text-light-2'>{label}</p>
+  </div>
+)
 
 const Profile = () => {
   const { id } = useParams()
@@ -45,6 +57,18 @@ const Profile = () => {
               </p>
             </div>
 
+            <div className='flex gap-8 mt-10 items-center justify-center xl:justify-start flex-wrap z-20'>
+              <StatBlock value={currentUser.posts.length} label='Posts' />
+              <StatBlock
+                value={currentUser.followers.length}
+                label='Followers'
+              />
+              <StatBlock
+                value={currentUser.following.length}
+                label='Following'
+              />
+            </div>
+
             <p className='small-medium md:base-medium text-center xl:text-left mt-7 max-w-screen-sm'>
               {currentUser.bio}
             </p>
@@ -69,16 +93,7 @@ const Profile = () => {
                 </p>
               </Link>
             ) : (
-              <Button type='button' className='shad-button_primary '>
-                <img
-                  src={"/assets/icons/follow.svg"}
-                  alt='edit'
-                  width={20}
-                  height={20}
-                  className='invert-white'
-                />
-                <p className='flex whitespace-nowrap small-medium'>Follow</p>
-              </Button>
+              <FollowButton userId={user.id} currentUser={currentUser} />
             )}
           </div>
         </div>
