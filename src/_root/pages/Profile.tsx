@@ -10,7 +10,7 @@ import { useGetUserById } from "@/lib/react-query/queries"
 import { GridPostList, Loader } from "@/components/shared"
 import { useUserContext } from "@/context/AuthContext"
 import { LikedPosts } from "."
-import FollowButton from "@/components/shared/FollowButton"
+import { FollowButton } from "@/components/shared"
 
 interface StabBlockProps {
   value: string | number
