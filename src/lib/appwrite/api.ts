@@ -490,3 +490,20 @@ export async function updateUser(user: IUpdateUser) {
     console.log(error)
   }
 }
+
+export async function followUser(userId: string, followedUserId: string) {
+  try {
+    const followedUser = await databases.createDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.followersCollectionId,
+      ID.unique(),
+      { follower: followedUserId, followedUser: userId }
+    )
+
+    if (!followedUser) throw Error
+
+    return followedUser
+  } catch (error) {
+    console.log(error)
+  }
+}
