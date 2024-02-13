@@ -507,3 +507,19 @@ export async function followUser(userId: string, followedUserId: string) {
     console.log(error)
   }
 }
+
+export async function unfollowUser(followedUserRecord: string) {
+  try {
+    const statusCode = await databases.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.followersCollectionId,
+      followedUserRecord
+    )
+
+    if (!statusCode) throw Error
+
+    return { status: "ok" }
+  } catch (error) {
+    console.log(error)
+  }
+}
