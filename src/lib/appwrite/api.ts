@@ -497,7 +497,7 @@ export async function followUser(userId: string, followedUserId: string) {
       appwriteConfig.databaseId,
       appwriteConfig.followersCollectionId,
       ID.unique(),
-      { follower: followedUserId, followedUser: userId }
+      { follower: userId, followedUser: followedUserId }
     )
 
     if (!followedUser) throw Error
