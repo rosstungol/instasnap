@@ -22,6 +22,7 @@ import {
   searchPosts,
   signInAccount,
   signOutAccount,
+  unfollowUser,
   updatePost,
   updateUser
 } from "../appwrite/api"
@@ -254,6 +255,20 @@ export const useFollowUser = () => {
       userId: string
       followedUserId: string
     }) => followUser(userId, followedUserId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_FOLLOWING]
+      })
+    }
+  })
+}
+
+export const useUnfollowUser = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (followedUserRecord: string) =>
+      unfollowUser(followedUserRecord),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_USER_FOLLOWING]
