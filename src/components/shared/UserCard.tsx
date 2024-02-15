@@ -1,12 +1,23 @@
 import { Models } from "appwrite"
 import { Link } from "react-router-dom"
-import { Button } from "../ui"
+import { FollowButton, Loader } from "."
+import { useGetCurrentUser } from "@/lib/react-query/queries"
 
 type UserCardProps = {
   user: Models.Document
 }
 
 const UserCard = ({ user }: UserCardProps) => {
+  const { data: currentUser } = useGetCurrentUser()
+
+  if (!currentUser) {
+    return (
+      <div className='user-card'>
+        <Loader />
+      </div>
+    )
+  }
+
   return (
     <Link to={`/profile/${user.$id}`} className='user-card'>
       <img
@@ -22,9 +33,10 @@ const UserCard = ({ user }: UserCardProps) => {
           {user.username}
         </p>
       </div>
-      <Button type='button' size='sm' className='shad-button_primary px-5'>
-        Follow
-      </Button>
+
+      {currentUser.$id !== user.$id && (
+        <FollowButton userId={currentUser.$id} currentUser={user} />
+      )}
     </Link>
   )
 }
