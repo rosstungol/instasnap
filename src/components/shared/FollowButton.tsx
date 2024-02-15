@@ -30,7 +30,7 @@ const FollowButton = ({ userId, currentUser }: FollowButtonProps) => {
   }, [user])
 
   const handleFollow = (e: React.MouseEvent) => {
-    e.stopPropagation()
+    e.preventDefault()
 
     if (followedUserRecord) {
       unfollowUser(followedUserRecord.$id)
