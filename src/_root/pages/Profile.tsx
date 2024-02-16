@@ -28,9 +28,9 @@ const Profile = () => {
   const { id } = useParams()
   const { pathname } = useLocation()
   const { user } = useUserContext()
-  const { data: currentUser } = useGetUserById(id || "")
+  const { data: profileUser } = useGetUserById(id || "")
 
-  if (!currentUser)
+  if (!profileUser)
     return (
       <div className='flex-center w-full h-full'>
         <Loader />
@@ -43,43 +43,43 @@ const Profile = () => {
         <div className='flex xl:flex-row flex-col max-xl:items-center flex-1 gap-7'>
           <img
             src={
-              currentUser.imageUrl || "/assets/icons/profile-placeholder.svg"
+              profileUser.imageUrl || "/assets/icons/profile-placeholder.svg"
             }
             className='w-36 h-36 rounded-full object-cover'
           />
           <div className='flex flex-col flex-1 justify-between md:mt-2'>
             <div className='flex flex-col w-full'>
               <h1 className='text-center xl:text-left h3-bold md:h1-semibold w-full'>
-                {currentUser.name}
+                {profileUser.name}
               </h1>
               <p className='small-regular md:body-medium text-light-3 text-center xl:text-left'>
-                @{currentUser.username}
+                @{profileUser.username}
               </p>
             </div>
 
             <div className='flex gap-8 mt-10 items-center justify-center xl:justify-start flex-wrap z-20'>
-              <StatBlock value={currentUser.posts.length} label='Posts' />
+              <StatBlock value={profileUser.posts.length} label='Posts' />
               <StatBlock
-                value={currentUser.followers.length}
+                value={profileUser.followers.length}
                 label='Followers'
               />
               <StatBlock
-                value={currentUser.following.length}
+                value={profileUser.following.length}
                 label='Following'
               />
             </div>
 
             <p className='small-medium md:base-medium text-center xl:text-left mt-7 max-w-screen-sm'>
-              {currentUser.bio}
+              {profileUser.bio}
             </p>
           </div>
 
           <div className='flex justify-center gap-4'>
-            {user.id === currentUser.$id ? (
+            {user.id === profileUser.$id ? (
               <Link
-                to={`/update-profile/${currentUser.$id}`}
+                to={`/update-profile/${profileUser.$id}`}
                 className={`h-10 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg  ${
-                  user.id !== currentUser.$id && "hidden"
+                  user.id !== profileUser.$id && "hidden"
                 }`}
               >
                 <img
@@ -93,13 +93,13 @@ const Profile = () => {
                 </p>
               </Link>
             ) : (
-              <FollowButton userId={user.id} currentUser={currentUser} />
+              <FollowButton userId={user.id} userIdToFollow={profileUser} />
             )}
           </div>
         </div>
       </div>
 
-      {currentUser.$id === user.id && (
+      {profileUser.$id === user.id && (
         <div className='flex max-w-5xl w-full'>
           <Link
             to={`/profile/${id}`}
@@ -136,10 +136,10 @@ const Profile = () => {
         <Route
           index
           element={
-            currentUser.posts.length === 0 ? (
+            profileUser.posts.length === 0 ? (
               <p className='text-light-4'>No posts available</p>
             ) : (
-              <GridPostList posts={currentUser.posts} showUser={false} />
+              <GridPostList posts={profileUser.posts} showUser={false} />
             )
           }
         />

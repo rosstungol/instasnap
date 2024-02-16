@@ -35,7 +35,7 @@ const UserCard = ({ user }: UserCardProps) => {
       </div>
 
       {currentUser.$id !== user.$id && (
-        <FollowButton userId={currentUser.$id} currentUser={user} />
+        <FollowButton userId={currentUser.$id} userIdToFollow={user} />
       )}
     </Link>
   )

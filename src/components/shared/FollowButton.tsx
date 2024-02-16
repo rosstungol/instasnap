@@ -10,10 +10,10 @@ import { Loader } from "."
 
 type FollowButtonProps = {
   userId: string
-  currentUser: Models.Document
+  userIdToFollow: Models.Document
 }
 
-const FollowButton = ({ userId, currentUser }: FollowButtonProps) => {
+const FollowButton = ({ userId, userIdToFollow }: FollowButtonProps) => {
   const [isFollowed, setIsFollowed] = useState(false)
   const { data: user } = useGetUserById(userId)
 
@@ -22,7 +22,7 @@ const FollowButton = ({ userId, currentUser }: FollowButtonProps) => {
     useUnfollowUser()
 
   const followedUserRecord = user?.following.find(
-    (record: Models.Document) => record.followedUser.$id === currentUser.$id
+    (record: Models.Document) => record.followedUser.$id === userIdToFollow.$id
   )
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const FollowButton = ({ userId, currentUser }: FollowButtonProps) => {
       unfollowUser(followedUserRecord.$id)
       setIsFollowed(false)
     } else {
-      followUser({ userId, followedUserId: currentUser.$id })
+      followUser({ userId, followedUserId: userIdToFollow.$id })
       setIsFollowed(true)
     }
   }
