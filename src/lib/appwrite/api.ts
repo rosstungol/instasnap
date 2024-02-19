@@ -558,8 +558,3 @@ export async function getHomeFeedPosts([...userId]) {
     console.log(error)
   }
 }
-
-getHomeFeedPosts(["65799ec266fcf01cfa48", "65ba491bbbd01859af98"])
-// .then(
-//   (result) => console.log(result)
-// )
