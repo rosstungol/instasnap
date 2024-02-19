@@ -1,4 +1,4 @@
-import { ID, Query } from "appwrite"
+import { ID, Models, Query } from "appwrite"
 import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 import { appwriteConfig, account, databases, avatars, storage } from "./config"
 
@@ -523,3 +523,43 @@ export async function unfollowUser(followedUserRecord: string) {
     console.log(error)
   }
 }
+
+export async function getHomeFeedPosts([...userId]) {
+  const userIdList = [...userId]
+
+  try {
+    const fetchPosts = userIdList.map(async (userId: string) => {
+      return await databases.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.postCollectionId,
+        [Query.equal("creator", userId), Query.orderDesc("$createdAt")]
+      )
+    })
+
+    const fetchResults = await Promise.all(fetchPosts)
+
+    let postList: Models.Document[] = []
+
+    fetchResults.forEach((creator) => {
+      creator.documents.forEach((post) => {
+        postList.push(post)
+      })
+    })
+
+    if (!postList) throw Error
+
+    return postList
+      .sort(
+        (a, b) =>
+          new Date(a.$createdAt).getTime() - new Date(b.$createdAt).getTime()
+      )
+      .reverse()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+getHomeFeedPosts(["65799ec266fcf01cfa48", "65ba491bbbd01859af98"])
+// .then(
+//   (result) => console.log(result)
+// )
