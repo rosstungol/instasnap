@@ -517,6 +517,8 @@ export async function getHomeFeedPosts(userId: string) {
     (creator: Models.Document) => creator.followedUser.$id
   )
 
+  userIds.push(userId)
+
   try {
     const fetchPosts = await Promise.all(
       userIds.map((userId: string) =>
