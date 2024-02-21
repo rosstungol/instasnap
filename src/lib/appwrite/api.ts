@@ -525,9 +525,9 @@ export async function unfollowUser(followedUserRecord: string) {
 }
 
 export async function getHomeFeedPosts(userId: string) {
-  if (!userId) throw Error
-
   const currentUser = await getUserById(userId)
+
+  if (!currentUser) throw Error
 
   const userIds = currentUser?.following.map(
     (creator: Models.Document) => creator.followedUser.$id
