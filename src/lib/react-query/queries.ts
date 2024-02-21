@@ -278,9 +278,10 @@ export const useUnfollowUser = () => {
   })
 }
 
-export const useGetHomeFeedPosts = (userIds: string[]) => {
+export const useGetHomeFeedPosts = (userId: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_HOME_FEED_POSTS],
-    queryFn: () => getHomeFeedPosts(userIds)
+    queryFn: () => getHomeFeedPosts(userId),
+    enabled: !!userId
   })
 }
