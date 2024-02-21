@@ -14,7 +14,6 @@ import {
   getHomeFeedPosts,
   getInfinitePosts,
   getPostById,
-  getRecentPosts,
   getUserById,
   getUserPosts,
   getUsers,
@@ -85,13 +84,6 @@ export const useSearchPosts = (searchTerm: string) => {
     queryKey: [QUERY_KEYS.SEARCH_POSTS, searchTerm],
     queryFn: () => searchPosts(searchTerm),
     enabled: !!searchTerm
-  })
-}
-
-export const useGetRecentPosts = () => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-    queryFn: getRecentPosts
   })
 }
 
