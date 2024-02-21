@@ -524,36 +524,36 @@ export async function unfollowUser(followedUserRecord: string) {
   }
 }
 
-export async function getHomeFeedPosts([...userId]) {
-  const userIdList = [...userId]
+export async function getHomeFeedPosts(userId: string) {
+  if (!userId) throw Error
+
+  const currentUser = await getUserById(userId)
+
+  const userIds = currentUser?.following.map(
+    (creator: Models.Document) => creator.followedUser.$id
+  )
 
   try {
-    const fetchPosts = userIdList.map(async (userId: string) => {
-      return await databases.listDocuments(
-        appwriteConfig.databaseId,
-        appwriteConfig.postCollectionId,
-        [Query.equal("creator", userId), Query.orderDesc("$createdAt")]
+    const fetchPosts = await Promise.all(
+      userIds.map((userId: string) =>
+        databases.listDocuments(
+          appwriteConfig.databaseId,
+          appwriteConfig.postCollectionId,
+          [Query.equal("creator", userId)]
+        )
       )
-    })
+    )
 
-    const fetchResults = await Promise.all(fetchPosts)
-
-    let postList: Models.Document[] = []
-
-    fetchResults.forEach((creator) => {
-      creator.documents.forEach((post) => {
-        postList.push(post)
-      })
-    })
+    const postList = fetchPosts
+      .flatMap((creator) => creator.documents)
+      .sort(
+        (a, b) =>
+          new Date(b.$createdAt).getTime() - new Date(a.$createdAt).getTime()
+      )
 
     if (!postList) throw Error
 
     return postList
-      .sort(
-        (a, b) =>
-          new Date(a.$createdAt).getTime() - new Date(b.$createdAt).getTime()
-      )
-      .reverse()
   } catch (error) {
     console.log(error)
   }
