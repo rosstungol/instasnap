@@ -1,14 +1,14 @@
 import { Models } from "appwrite"
 import { Loader, PostCard } from "@/components/shared"
-import { useGetRecentPosts, useGetUsers } from "@/lib/react-query/queries"
+import { useGetHomeFeedPosts, useGetUsers } from "@/lib/react-query/queries"
 import UserCard from "@/components/shared/UserCard"
+import { useUserContext } from "@/context/AuthContext"
 
 const Home = () => {
-  const {
-    data: posts,
-    isPending: isPostLoading,
-    isError: isErrorPosts
-  } = useGetRecentPosts()
+  const { user } = useUserContext()
+  const { data: homeFeedPosts, isError: isErrorPosts } = useGetHomeFeedPosts(
+    user.id
+  )
 
   const {
     data: creators,
@@ -16,15 +16,49 @@ const Home = () => {
     isError: isErrorCreators
   } = useGetUsers(10)
 
-  if (isErrorPosts || isErrorCreators) {
-    ;<div className='flex flex-1'>
+  if (!homeFeedPosts) {
+    return (
       <div className='home-container'>
-        <p className='body-medium text-light-1'>Something went wrong.</p>
+        <Loader />
       </div>
-      <div className='home-creators'>
-        <p className='body-medium text-light-1'>Something went wrong.</p>
+    )
+  }
+
+  const homeFeed =
+    homeFeedPosts.length === 0 ? (
+      <p className='text-light-4'>No post available.</p>
+    ) : (
+      <ul className='flex flex-col flex-1 gap-9 w-full'>
+        {homeFeedPosts.map((post: Models.Document) => (
+          <PostCard post={post} key={post.$id} />
+        ))}
+      </ul>
+    )
+
+  const topCreators =
+    isUserLoading && !creators ? (
+      <Loader />
+    ) : (
+      <ul className='grid 2xl:grid-cols-2 gap-6'>
+        {creators?.map((creator) => (
+          <li key={creator.$id}>
+            <UserCard user={creator} />
+          </li>
+        ))}
+      </ul>
+    )
+
+  if (isErrorPosts || isErrorCreators) {
+    return (
+      <div className='flex flex-1'>
+        <div className='home-container'>
+          <p className='body-medium text-light-1'>Something went wrong.</p>
+        </div>
+        <div className='home-creators'>
+          <p className='body-medium text-light-1'>Something went wrong.</p>
+        </div>
       </div>
-    </div>
+    )
   }
 
   return (
@@ -32,31 +66,13 @@ const Home = () => {
       <div className='home-container'>
         <div className='home-posts'>
           <h2 className='h3-bold md:h2-bold text-left w-full'>Home Feed</h2>
-          {isPostLoading && !posts ? (
-            <Loader />
-          ) : (
-            <ul className='flex flex-col flex-1 gap-9 w-full'>
-              {posts?.documents.map((post: Models.Document) => (
-                <PostCard post={post} key={post.$id} />
-              ))}
-            </ul>
-          )}
+          {homeFeed}
         </div>
       </div>
 
       <div className='home-creators'>
         <h3 className='h3-bold text-light-1'>Top Creators</h3>
-        {isUserLoading && !creators ? (
-          <Loader />
-        ) : (
-          <ul className='grid 2xl:grid-cols-2 gap-6'>
-            {creators?.map((creator) => (
-              <li key={creator.$id}>
-                <UserCard user={creator} />
-              </li>
-            ))}
-          </ul>
-        )}
+        {topCreators}
       </div>
     </div>
   )
