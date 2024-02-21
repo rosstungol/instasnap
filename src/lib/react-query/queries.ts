@@ -59,7 +59,7 @@ export const useCreatePost = () => {
     mutationFn: (post: INewPost) => createPost(post),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
+        queryKey: [QUERY_KEYS.GET_HOME_FEED_POSTS]
       })
     }
   })
@@ -119,7 +119,7 @@ export const useLikePost = () => {
         queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id]
       })
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
+        queryKey: [QUERY_KEYS.GET_HOME_FEED_POSTS]
       })
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POSTS]
@@ -139,7 +139,7 @@ export const useSavePost = () => {
       savePost(postId, userId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
+        queryKey: [QUERY_KEYS.GET_HOME_FEED_POSTS]
       })
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POSTS]
@@ -158,7 +158,7 @@ export const useDeleteSavedPost = () => {
     mutationFn: (savedRecordId: string) => deleteSavedPost(savedRecordId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
+        queryKey: [QUERY_KEYS.GET_HOME_FEED_POSTS]
       })
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POSTS]
@@ -191,7 +191,7 @@ export const useDeletePost = () => {
       deletePost(postId, imageId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
+        queryKey: [QUERY_KEYS.GET_HOME_FEED_POSTS]
       })
     }
   })
