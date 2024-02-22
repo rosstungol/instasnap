@@ -11,7 +11,7 @@ import {
   deleteSavedPost,
   followUser,
   getCurrentUser,
-  getHomeFeedPosts,
+  getFollowingPosts,
   getInfinitePosts,
   getPostById,
   getUserById,
@@ -270,10 +270,10 @@ export const useUnfollowUser = () => {
   })
 }
 
-export const useGetHomeFeedPosts = (userId: string) => {
+export const useGetFollowingPosts = (userId: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_HOME_FEED_POSTS],
-    queryFn: () => getHomeFeedPosts(userId),
+    queryFn: () => getFollowingPosts(userId),
     enabled: !!userId
   })
 }

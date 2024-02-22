@@ -1,12 +1,12 @@
 import { Models } from "appwrite"
 import { Loader, PostCard } from "@/components/shared"
-import { useGetHomeFeedPosts, useGetUsers } from "@/lib/react-query/queries"
+import { useGetFollowingPosts, useGetUsers } from "@/lib/react-query/queries"
 import UserCard from "@/components/shared/UserCard"
 import { useUserContext } from "@/context/AuthContext"
 
 const Home = () => {
   const { user } = useUserContext()
-  const { data: homeFeedPosts, isError: isErrorPosts } = useGetHomeFeedPosts(
+  const { data: homeFeedPosts, isError: isErrorPosts } = useGetFollowingPosts(
     user.id
   )
 

@@ -508,7 +508,7 @@ export async function unfollowUser(followedUserRecord: string) {
   }
 }
 
-export async function getHomeFeedPosts(userId: string) {
+export async function getFollowingPosts(userId: string) {
   const currentUser = await getUserById(userId)
 
   if (!currentUser) throw Error
