@@ -508,18 +508,18 @@ export async function unfollowUser(followedUserRecord: string) {
   }
 }
 
-export async function getFollowingPosts(userId: string) {
-  const currentUser = await getUserById(userId)
-
-  if (!currentUser) throw Error
-
-  const userIds = currentUser?.following.map(
-    (creator: Models.Document) => creator.followedUser.$id
-  )
-
-  userIds.push(userId)
-
+export async function getFollowingPosts() {
   try {
+    const currentUser = await getCurrentUser()
+
+    if (!currentUser) throw Error
+
+    const userIds = currentUser?.following.map(
+      (creator: Models.Document) => creator.followedUser.$id
+    )
+
+    userIds.push(currentUser.$id)
+
     const fetchPosts = await Promise.all(
       userIds.map((userId: string) =>
         databases.listDocuments(
