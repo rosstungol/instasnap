@@ -544,3 +544,16 @@ export async function getFollowingPosts() {
     console.log(error)
   }
 }
+
+export async function getHomeFeedPosts(page: number, pageSize: number = 3) {
+  try {
+    const allPosts = await getFollowingPosts()
+    const startIndex = (page - 1) * 3
+    const endIndex = startIndex + pageSize
+    const slicedPosts = allPosts?.slice(startIndex, endIndex)
+
+    return slicedPosts
+  } catch (error) {
+    console.log(error)
+  }
+}
