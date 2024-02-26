@@ -1,20 +1,30 @@
-import { Models } from "appwrite"
+import { useEffect } from "react"
+import { useInView } from "react-intersection-observer"
 import { Loader, PostCard } from "@/components/shared"
-import { useGetFollowingPosts, useGetUsers } from "@/lib/react-query/queries"
-import UserCard from "@/components/shared/UserCard"
-import { useUserContext } from "@/context/AuthContext"
+import { UserCard } from "@/components/shared"
+import { useGetHomeFeedPosts, useGetUsers } from "@/lib/react-query/queries"
 
 const Home = () => {
-  const { user } = useUserContext()
-  const { data: homeFeedPosts, isError: isErrorPosts } = useGetFollowingPosts(
-    user.id
-  )
+  const { ref, inView } = useInView()
+
+  const {
+    data,
+    fetchNextPage,
+    isFetchingNextPage,
+    isError: isErrorPosts
+  } = useGetHomeFeedPosts()
+
+  useEffect(() => {
+    if (inView) fetchNextPage()
+  }, [inView])
 
   const {
     data: creators,
     isPending: isUserLoading,
     isError: isErrorCreators
   } = useGetUsers(10)
+
+  const homeFeedPosts = data?.pages.flatMap((page) => page)
 
   if (!homeFeedPosts) {
     return (
@@ -24,16 +34,23 @@ const Home = () => {
     )
   }
 
-  const homeFeed =
-    homeFeedPosts.length === 0 ? (
-      <p className='text-light-4'>No post available.</p>
-    ) : (
-      <ul className='flex flex-col flex-1 gap-9 w-full'>
-        {homeFeedPosts.map((post: Models.Document) => (
-          <PostCard post={post} key={post.$id} />
-        ))}
-      </ul>
-    )
+  const homeFeed = (
+    <ul className='flex flex-col flex-1 gap-9 w-full'>
+      {homeFeedPosts.map((post, i) => {
+        if (i + 1 === homeFeedPosts.length)
+          return (
+            <li ref={ref} key={post.$id}>
+              <PostCard post={post} />
+            </li>
+          )
+        return (
+          <li key={post.$id}>
+            <PostCard post={post} />
+          </li>
+        )
+      })}
+    </ul>
+  )
 
   const topCreators =
     isUserLoading && !creators ? (
@@ -66,7 +83,14 @@ const Home = () => {
       <div className='home-container'>
         <div className='home-posts'>
           <h2 className='h3-bold md:h2-bold text-left w-full'>Home Feed</h2>
+
           {homeFeed}
+
+          {isFetchingNextPage && (
+            <div className='mt-10'>
+              <Loader />
+            </div>
+          )}
         </div>
       </div>
 
