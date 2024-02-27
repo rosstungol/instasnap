@@ -3,6 +3,7 @@ import { useInView } from "react-intersection-observer"
 import { Loader, PostCard } from "@/components/shared"
 import { UserCard } from "@/components/shared"
 import { useGetHomeFeedPosts, useGetUsers } from "@/lib/react-query/queries"
+import { toast } from "@/components/ui"
 
 const Home = () => {
   const { ref, inView } = useInView()
@@ -66,14 +67,10 @@ const Home = () => {
     )
 
   if (isErrorPosts || isErrorCreators) {
+    toast({ title: "Something went wrong." })
     return (
       <div className='flex flex-1'>
-        <div className='home-container'>
-          <p className='body-medium text-light-1'>Something went wrong.</p>
-        </div>
-        <div className='home-creators'>
-          <p className='body-medium text-light-1'>Something went wrong.</p>
-        </div>
+        <Loader />
       </div>
     )
   }
