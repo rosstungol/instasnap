@@ -65,6 +65,15 @@ export const useCreatePost = () => {
   })
 }
 
+export const useGetHomeFeedPosts = () => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_HOME_FEED_POSTS],
+    queryFn: ({ pageParam }) => getHomeFeedPosts(pageParam),
+    getNextPageParam: (_, pages) => pages.length + 1,
+    initialPageParam: 1
+  })
+}
+
 export const useGetPosts = () => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
@@ -267,14 +276,5 @@ export const useUnfollowUser = () => {
         queryKey: [QUERY_KEYS.GET_USER_FOLLOWING]
       })
     }
-  })
-}
-
-export const useGetHomeFeedPosts = () => {
-  return useInfiniteQuery({
-    queryKey: [QUERY_KEYS.GET_HOME_FEED_POSTS],
-    queryFn: ({ pageParam }) => getHomeFeedPosts(pageParam),
-    getNextPageParam: (_, pages) => pages.length + 1,
-    initialPageParam: 1
   })
 }

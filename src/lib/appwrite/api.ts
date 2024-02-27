@@ -119,6 +119,56 @@ export async function createPost(post: INewPost) {
   }
 }
 
+export async function getFollowingPosts() {
+  try {
+    const currentUser = await getCurrentUser()
+
+    if (!currentUser) throw Error
+
+    const userIds = currentUser?.following.map(
+      (creator: Models.Document) => creator.followedUser.$id
+    )
+
+    userIds.push(currentUser.$id)
+
+    const fetchPosts = await Promise.all(
+      userIds.map((userId: string) =>
+        databases.listDocuments(
+          appwriteConfig.databaseId,
+          appwriteConfig.postCollectionId,
+          [Query.equal("creator", userId)]
+        )
+      )
+    )
+
+    const postList = fetchPosts
+      .flatMap((creator) => creator.documents)
+      .sort(
+        (a, b) =>
+          new Date(b.$createdAt).getTime() - new Date(a.$createdAt).getTime()
+      )
+
+    if (!postList) throw Error
+
+    return postList
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function getHomeFeedPosts(page: number, pageSize: number = 3) {
+  try {
+    const allPosts = await getFollowingPosts()
+    const startIndex = (page - 1) * 3
+    const endIndex = startIndex + pageSize
+    const slicedPosts = allPosts?.slice(startIndex, endIndex)
+
+    return slicedPosts
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
   const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(10)]
 
@@ -503,56 +553,6 @@ export async function unfollowUser(followedUserRecord: string) {
     if (!statusCode) throw Error
 
     return { status: "ok" }
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-export async function getFollowingPosts() {
-  try {
-    const currentUser = await getCurrentUser()
-
-    if (!currentUser) throw Error
-
-    const userIds = currentUser?.following.map(
-      (creator: Models.Document) => creator.followedUser.$id
-    )
-
-    userIds.push(currentUser.$id)
-
-    const fetchPosts = await Promise.all(
-      userIds.map((userId: string) =>
-        databases.listDocuments(
-          appwriteConfig.databaseId,
-          appwriteConfig.postCollectionId,
-          [Query.equal("creator", userId)]
-        )
-      )
-    )
-
-    const postList = fetchPosts
-      .flatMap((creator) => creator.documents)
-      .sort(
-        (a, b) =>
-          new Date(b.$createdAt).getTime() - new Date(a.$createdAt).getTime()
-      )
-
-    if (!postList) throw Error
-
-    return postList
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-export async function getHomeFeedPosts(page: number, pageSize: number = 3) {
-  try {
-    const allPosts = await getFollowingPosts()
-    const startIndex = (page - 1) * 3
-    const endIndex = startIndex + pageSize
-    const slicedPosts = allPosts?.slice(startIndex, endIndex)
-
-    return slicedPosts
   } catch (error) {
     console.log(error)
   }
