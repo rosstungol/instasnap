@@ -10,6 +10,7 @@ import {
   deletePost,
   deleteSavedPost,
   followUser,
+  getAllUsers,
   getCurrentUser,
   getHomeFeedPosts,
   getInfinitePosts,
@@ -227,6 +228,15 @@ export const useGetUsers = (limit?: number) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USERS],
     queryFn: () => getUsers(limit)
+  })
+}
+
+export const useGetAllUsers = () => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_ALL_USERS],
+    queryFn: ({ pageParam }) => getAllUsers(pageParam),
+    getNextPageParam: (_, pages) => pages.length + 1,
+    initialPageParam: 1
   })
 }
 
