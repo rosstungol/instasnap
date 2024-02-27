@@ -81,7 +81,13 @@ const Home = () => {
         <div className='home-posts'>
           <h2 className='h3-bold md:h2-bold text-left w-full'>Home Feed</h2>
 
-          {homeFeed}
+          {homeFeedPosts.length === 0 ? (
+            <p className='text-light-4'>
+              Start following creators to see posts!
+            </p>
+          ) : (
+            homeFeed
+          )}
 
           {isFetchingNextPage && (
             <div className='mt-10'>
