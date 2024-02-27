@@ -471,6 +471,19 @@ export async function getUsers(limit?: number) {
   }
 }
 
+export async function getAllUsers(page: number, pageSize: number = 9) {
+  try {
+    const allUsers = await getUsers()
+    const startIndex = (page - 1) * pageSize
+    const endIndex = startIndex + pageSize
+    const slicedUsers = allUsers?.slice(startIndex, endIndex)
+
+    return slicedUsers
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export async function updateUser(user: IUpdateUser) {
   const hasFileToUpdate = user.file.length > 0
 
