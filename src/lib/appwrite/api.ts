@@ -243,6 +243,24 @@ export async function getUserPosts(userId?: string) {
   }
 }
 
+export async function getUserProfilePosts(
+  userId: string,
+  page: number,
+  pageSize: number = 6
+) {
+  try {
+    const profileUser = await getUserPosts(userId)
+    const allPosts = profileUser?.documents
+    const startIndex = (page - 1) * pageSize
+    const endIndex = startIndex + pageSize
+    const slicedPosts = allPosts?.slice(startIndex, endIndex)
+
+    return slicedPosts
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export async function likePost(postId: string, likesArray: string[]) {
   try {
     const updatedPost = await databases.updateDocument(
