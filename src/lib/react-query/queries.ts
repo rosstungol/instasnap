@@ -17,6 +17,7 @@ import {
   getPostById,
   getUserById,
   getUserPosts,
+  getUserProfilePosts,
   getUsers,
   likePost,
   savePost,
@@ -110,6 +111,15 @@ export const useGetUserPosts = (userId?: string) => {
     queryKey: [QUERY_KEYS.GET_USER_POSTS, userId],
     queryFn: () => getUserPosts(userId),
     enabled: !!userId
+  })
+}
+
+export const useGetUserProfilePosts = (userId: string) => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_USER_PROFILE_POSTS],
+    queryFn: ({ pageParam }) => getUserProfilePosts(userId, pageParam),
+    getNextPageParam: (_, pages) => pages.length + 1,
+    initialPageParam: 1
   })
 }
 
