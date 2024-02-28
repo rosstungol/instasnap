@@ -469,7 +469,7 @@ export async function getUserById(userId?: string) {
 }
 
 export async function getUsers(limit?: number) {
-  const queries: any[] = [Query.orderDesc("$createdAt")]
+  const queries: any[] = []
 
   if (limit) {
     queries.push(Query.limit(limit))
@@ -483,12 +483,15 @@ export async function getUsers(limit?: number) {
 
     if (!allUsers) throw Error
 
-    return allUsers.documents
+    return allUsers.documents.sort(
+      (a, b) => b.followers.length - a.followers.length
+    )
   } catch (error) {
     console.log(error)
   }
 }
 
+getUsers().then((res) => console.log(res))
 export async function getAllUsers(page: number, pageSize: number = 9) {
   try {
     const allUsers = await getUsers()
