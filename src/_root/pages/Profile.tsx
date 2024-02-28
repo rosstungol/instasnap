@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import {
   Link,
   Outlet,
@@ -6,11 +7,15 @@ import {
   useLocation,
   useParams
 } from "react-router-dom"
-import { useGetUserById } from "@/lib/react-query/queries"
-import { GridPostList, Loader } from "@/components/shared"
-import { useUserContext } from "@/context/AuthContext"
+import { useInView } from "react-intersection-observer"
 import { LikedPosts } from "."
+import { GridPostItem, Loader } from "@/components/shared"
 import { FollowButton } from "@/components/shared"
+import { useUserContext } from "@/context/AuthContext"
+import {
+  useGetUserById,
+  useGetUserProfilePosts
+} from "@/lib/react-query/queries"
 
 interface StabBlockProps {
   value: string | number
@@ -25,18 +30,56 @@ const StatBlock = ({ value, label }: StabBlockProps) => (
 )
 
 const Profile = () => {
+  const { ref, inView } = useInView()
   const { id } = useParams()
   const { pathname } = useLocation()
   const { user } = useUserContext()
   const { data: profileUser } = useGetUserById(id || "")
+  const { data, fetchNextPage, isFetchingNextPage } = useGetUserProfilePosts(
+    id!
+  )
 
-  if (!profileUser)
+  useEffect(() => {
+    if (inView) fetchNextPage()
+  }, [inView])
+
+  const userPosts = data?.pages.flatMap((page) => page)
+  console.log(userPosts)
+
+  if (!profileUser || !userPosts)
     return (
       <div className='flex-center w-full h-full'>
         <Loader />
       </div>
     )
 
+  const userPostGrid = (
+    <ul className='grid-container'>
+      {userPosts.map((post, i) => {
+        if (i + 1 === userPosts.length)
+          return (
+            <li ref={ref} className='relative min-w-80 h-80' key={post?.$id}>
+              <GridPostItem
+                user={user}
+                post={post}
+                showUser={false}
+                showStats={true}
+              />
+            </li>
+          )
+        return (
+          <li className='relative min-w-80 h-80' key={post?.$id}>
+            <GridPostItem
+              user={user}
+              post={post}
+              showUser={false}
+              showStats={true}
+            />
+          </li>
+        )
+      })}
+    </ul>
+  )
   return (
     <div className='profile-container'>
       <div className='profile-inner_container'>
@@ -139,13 +182,18 @@ const Profile = () => {
             profileUser.posts.length === 0 ? (
               <p className='text-light-4'>No posts available</p>
             ) : (
-              <GridPostList posts={profileUser.posts} showUser={false} />
+              userPostGrid
             )
           }
         />
         <Route path='/liked-posts' element={<LikedPosts />} />
       </Routes>
       <Outlet />
+      {isFetchingNextPage && (
+        <div className='mt-10'>
+          <Loader />
+        </div>
+      )}
     </div>
   )
 }
