@@ -491,7 +491,6 @@ export async function getUsers(limit?: number) {
   }
 }
 
-getUsers().then((res) => console.log(res))
 export async function getAllUsers(page: number, pageSize: number = 9) {
   try {
     const allUsers = await getUsers()
