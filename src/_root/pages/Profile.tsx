@@ -44,7 +44,6 @@ const Profile = () => {
   }, [inView])
 
   const userPosts = data?.pages.flatMap((page) => page)
-  console.log(userPosts)
 
   if (!profileUser || !userPosts)
     return (
