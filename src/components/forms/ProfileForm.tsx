@@ -51,6 +51,8 @@ const ProfileForm = () => {
     const updatedUser: any = await updateUser({
       userId: currentUser.$id,
       name: values.name,
+      username: values.username,
+      email: values.email,
       bio: values.bio,
       file: values.file,
       imageUrl: currentUser.imageUrl,
@@ -64,6 +66,8 @@ const ProfileForm = () => {
     setUser({
       ...user,
       name: updatedUser?.name,
+      username: updatedUser?.username,
+      email: updateUser?.email,
       bio: updatedUser?.bio,
       imageUrl: updatedUser?.imageUrl
     })
@@ -101,7 +105,7 @@ const ProfileForm = () => {
             <FormItem>
               <FormLabel className='shad-form_label'>Name</FormLabel>
               <FormControl>
-                <Input className='shad-input' {...field} />
+                <Input type='text' className='shad-input' {...field} />
               </FormControl>
               <FormMessage className='shad-form_message' />
             </FormItem>
@@ -115,7 +119,7 @@ const ProfileForm = () => {
             <FormItem>
               <FormLabel className='shad-form_label'>Username</FormLabel>
               <FormControl>
-                <Input className='shad-input' {...field} />
+                <Input type='text' className='shad-input' {...field} />
               </FormControl>
               <FormMessage className='shad-form_message' />
             </FormItem>
