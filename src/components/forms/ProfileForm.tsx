@@ -67,7 +67,7 @@ const ProfileForm = () => {
       ...user,
       name: updatedUser?.name,
       username: updatedUser?.username,
-      email: updateUser?.email,
+      email: updatedUser?.email,
       bio: updatedUser?.bio,
       imageUrl: updatedUser?.imageUrl
     })
