@@ -23,7 +23,7 @@ const Home = () => {
     data: creators,
     isPending: isUserLoading,
     isError: isErrorCreators
-  } = useGetUsers(10)
+  } = useGetUsers(6)
 
   const homeFeedPosts = data?.pages.flatMap((page) => page)
 
