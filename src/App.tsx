@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 import "./globals.css"
 import AuthLayout from "./_auth/AuthLayout"
 import SigninForm from "./_auth/forms/SigninForm"
@@ -12,8 +12,7 @@ import {
   AllUsers,
   CreatePost,
   EditPost,
-  PostDetails,
-  LikedPosts
+  PostDetails
 } from "./_root/pages"
 import RootLayout from "./_root/RootLayout"
 import { Toaster } from "@/components/ui/toaster"
@@ -36,6 +35,7 @@ const App = () => {
           <Route path='/create-post' element={<CreatePost />} />
           <Route path='/update-post/:id' element={<EditPost />} />
           <Route path='/posts/:id' element={<PostDetails />} />
+          <Route path='*' element={<Navigate to='/' />} />
         </Route>
       </Routes>
 
