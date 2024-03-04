@@ -142,9 +142,6 @@ export const useLikePost = () => {
         queryKey: [QUERY_KEYS.GET_HOME_FEED_POSTS]
       })
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_POSTS]
-      })
-      queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_CURRENT_USER]
       })
     }
@@ -162,9 +159,6 @@ export const useSavePost = () => {
         queryKey: [QUERY_KEYS.GET_HOME_FEED_POSTS]
       })
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_POSTS]
-      })
-      queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_CURRENT_USER]
       })
     }
@@ -179,9 +173,6 @@ export const useDeleteSavedPost = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_HOME_FEED_POSTS]
-      })
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_POSTS]
       })
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_CURRENT_USER]
