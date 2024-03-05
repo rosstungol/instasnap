@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react"
 import { useInView } from "react-intersection-observer"
 import { Input } from "@/components/ui/input"
-import { GridPostList, Loader, SearchResults } from "@/components/shared"
-import { useGetPosts, useSearchPosts } from "@/lib/react-query/queries"
+import { GridPostItem, Loader, SearchResults } from "@/components/shared"
+import { useGetExplorePosts, useSearchPosts } from "@/lib/react-query/queries"
 import useDebounce from "@/hooks/useDebounce"
+import { useUserContext } from "@/context/AuthContext"
 
 const Explore = () => {
   const { ref, inView } = useInView()
-  const { data: posts, fetchNextPage, hasNextPage } = useGetPosts()
+  const { user } = useUserContext()
+  const { data, fetchNextPage, isFetchingNextPage } = useGetExplorePosts()
+
+  const explorePosts = data?.pages.flatMap((page) => page)
 
   const [searchValue, setSearchValue] = useState("")
   const debouncedBValue = useDebounce(searchValue, 500)
@@ -18,7 +22,7 @@ const Explore = () => {
     if (inView && !searchValue) fetchNextPage()
   }, [inView, searchValue])
 
-  if (!posts) {
+  if (!explorePosts) {
     return (
       <div className='flex flex-center w-full h-full'>
         <Loader />
@@ -27,9 +31,34 @@ const Explore = () => {
   }
 
   const shouldShowSearchResults = searchValue !== ""
-  const shouldShowPosts =
-    !shouldShowSearchResults &&
-    posts.pages.every((item) => item.documents.length === 0)
+
+  const explorePostGrid = (
+    <ul className='grid-container'>
+      {explorePosts.map((post, i) => {
+        if (i + 1 === explorePosts.length)
+          return (
+            <li ref={ref} className='relative min-w-80 h-80' key={post?.$id}>
+              <GridPostItem
+                user={user}
+                post={post}
+                showUser={false}
+                showStats={true}
+              />
+            </li>
+          )
+        return (
+          <li className='relative min-w-80 h-80' key={post?.$id}>
+            <GridPostItem
+              user={user}
+              post={post}
+              showUser={false}
+              showStats={true}
+            />
+          </li>
+        )
+      })}
+    </ul>
+  )
 
   return (
     <div className='explore-container'>
@@ -54,35 +83,21 @@ const Explore = () => {
 
       <div className='flex-between w-full max-w-5xl mt-16 mb-7'>
         <h3 className='body-bold md:h3-bold'>Popular Today</h3>
-
-        <div className='flex-center gap-3 bg-dark-3 rounded-xl px-4 py-2 cursor-pointer'>
-          <p className='small-medium md:base-medium text-light-2'>All</p>
-          <img
-            src='/assets/icons/filter.svg'
-            width={20}
-            height={20}
-            alt='filter'
-          />
-        </div>
       </div>
 
       <div className='flex flex-wrap gap-9 w-full max-w-5xl'>
         {shouldShowSearchResults ? (
           <SearchResults
             isSearchFetching={isSearchFetching}
-            searchedPosts={searchedPosts}
+            searchedPosts={searchedPosts?.documents}
           />
-        ) : shouldShowPosts ? (
-          <p className='text-light-4 mt-10 text-center w-full'>End of posts</p>
         ) : (
-          posts.pages.map((item, index) => (
-            <GridPostList key={`page-${index}`} posts={item.documents} />
-          ))
+          explorePostGrid
         )}
       </div>
 
-      {hasNextPage && !searchValue && (
-        <div ref={ref} className='mt-10'>
+      {isFetchingNextPage && (
+        <div className='mt-10'>
           <Loader />
         </div>
       )}
