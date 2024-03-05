@@ -191,6 +191,35 @@ export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
   }
 }
 
+export async function getAllPosts() {
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      [Query.orderDesc("$updatedAt")]
+    )
+
+    if (!posts) throw Error
+
+    return posts.documents
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function getExplorePosts(page: number, pageSize: number = 9) {
+  try {
+    const allPosts = await getAllPosts()
+    const startIndex = (page - 1) * pageSize
+    const endIndex = startIndex + pageSize
+    const slicedPosts = allPosts?.slice(startIndex, endIndex)
+
+    return slicedPosts
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export async function searchPosts(searchTerm: string) {
   try {
     const posts = await databases.listDocuments(
