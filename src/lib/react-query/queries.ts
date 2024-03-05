@@ -12,8 +12,8 @@ import {
   followUser,
   getAllUsers,
   getCurrentUser,
+  getExplorePosts,
   getHomeFeedPosts,
-  getInfinitePosts,
   getPostById,
   getUserById,
   getUserPosts,
@@ -76,17 +76,12 @@ export const useGetHomeFeedPosts = () => {
   })
 }
 
-export const useGetPosts = () => {
+export const useGetExplorePosts = () => {
   return useInfiniteQuery({
-    queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
-    queryFn: getInfinitePosts,
-    getNextPageParam: (lastPage) => {
-      if (lastPage && lastPage.documents.length === 0) return null
-
-      const lastId = lastPage?.documents[lastPage?.documents.length - 1].$id
-
-      return lastId
-    }
+    queryKey: [QUERY_KEYS.GET_EXPLORE_POSTS],
+    queryFn: ({ pageParam }) => getExplorePosts(pageParam),
+    getNextPageParam: (_, pages) => pages.length + 1,
+    initialPageParam: 1
   })
 }
 
