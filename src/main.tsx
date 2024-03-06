@@ -7,13 +7,13 @@ import { ErrorBoundary } from "./components/error"
 import { ErrorMessage } from "./components/error"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <ErrorBoundary fallback={<ErrorMessage />}>
-    <BrowserRouter>
-      <QueryProvider>
-        <AuthProvider>
+  <BrowserRouter>
+    <QueryProvider>
+      <AuthProvider>
+        <ErrorBoundary fallback={<ErrorMessage />}>
           <App />
-        </AuthProvider>
-      </QueryProvider>
-    </BrowserRouter>
-  </ErrorBoundary>
+        </ErrorBoundary>
+      </AuthProvider>
+    </QueryProvider>
+  </BrowserRouter>
 )
