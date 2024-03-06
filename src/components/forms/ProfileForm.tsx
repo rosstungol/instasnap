@@ -60,7 +60,10 @@ const ProfileForm = () => {
     })
 
     if (updatedUser === undefined) {
-      toast({ title: "Update user failed. Please try again." })
+      toast({
+        variant: "destructive",
+        title: "Update user failed. Please try again."
+      })
     }
 
     setUser({
