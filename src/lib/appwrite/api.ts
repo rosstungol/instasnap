@@ -549,8 +549,11 @@ export async function updateUser(user: IUpdateUser) {
       }
     )
 
+    // Update account
+    const updatedAccount = await account.updateName(user.name)
+
     // Failed to update
-    if (!updatedUser) {
+    if (!updatedUser || !updatedAccount) {
       // Delete new file that has been recently uploaded
       if (hasFileToUpdate) {
         await deleteFile(image.imageId)
