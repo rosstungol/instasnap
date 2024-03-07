@@ -1,8 +1,8 @@
 ## Snapgram
 
-[Live demo](https://snapgram-lilac.vercel.app)
-
 A social media app built with React and TypeScript.
+
+[Live demo](https://snapgram-lilac.vercel.app)
 
 ### Features
 
