@@ -35,6 +35,7 @@ const LeftSidebar = () => {
             src={user.imageUrl || "/assets/icons/profile-placeholder.svg"}
             alt='profile'
             className='h-14 w-14 rounded-full object-cover'
+            loading='lazy'
           />
           <div className='flex flex-col'>
             <p className='body-bold'>{user.name}</p>
